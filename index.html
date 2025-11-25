@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QNET - Мессенджер нового поколения</title>
+    <meta name="description" content="Иммерсивное общение с технологиями будущего. Квантовая скорость, умный ИИ и революционный дизайн.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-cta {
+            background: var(--primary-gradient);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero-logo {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+            color: var(--text-primary);
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.3),
+                0 0 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .logo-letter {
+            display: inline-block;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .logo-letter.exploded {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            margin: 0.5rem;
+            border: none;
+        }
+
+        .cta-button.primary {
+            background: var(--primary-gradient);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .features {
+            padding: 5rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--text-primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .messenger-section {
+            display: none;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .messenger-container {
+            width: 100%;
+            max-width: 1400px;
+            height: 90vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto;
+            display: flex;
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .sidebar {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.05);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .floating-bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(102, 126, 234, 0.1) 0%,
+                rgba(118, 75, 162, 0.05) 30%,
+                transparent 70%);
+            animation: float 25s infinite ease-in-out;
+        }
+
+        .bubble:nth-child(1) { width: 150px; height: 150px; top: 10%; left: 10%; animation-delay: 0s; }
+        .bubble:nth-child(2) { width: 100px; height: 100px; top: 60%; left: 80%; animation-delay: 3s; }
+        .bubble:nth-child(3) { width: 180px; height: 180px; top: 80%; left: 20%; animation-delay: 6s; }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                border-radius: 50%;
+            }
+            25% {
+                transform: translate(60px, -70px) rotate(90deg) scale(1.15);
+                border-radius: 60% 40% 70% 30%;
+            }
+            50% {
+                transform: translate(-40px, 60px) rotate(180deg) scale(0.95);
+                border-radius: 40% 60% 30% 70%;
+            }
+            75% {
+                transform: translate(70px, 40px) rotate(270deg) scale(1.1);
+                border-radius: 70% 30% 60% 40%;
+            }
+        }
+
+        .flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .flash-overlay.active {
+            opacity: 1;
+            animation: flashEffect 0.5s ease-out;
+        }
+
+        @keyframes flashEffect {
+            0% { opacity: 0.9; }
+            70% { opacity: 0.7; }
+            100% { opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-logo {
+                font-size: 3rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .messenger-container {
+                flex-direction: column;
+                height: 95vh;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: 40%;
+            }
+        }
+
+        .stats {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .messenger-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .messenger-sidebar {
+            padding: 1rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .dialog-item {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .dialog-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .dialog-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .dialog-info {
+            flex: 1;
+        }
+
+        .dialog-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .dialog-preview {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 1rem 1.5rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .message.received {
+            background: rgba(255, 255, 255, 0.1);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.sent {
+            background: var(--primary-gradient);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-input {
+            padding: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 1rem 1.5rem;
+            color: white;
+            outline: none;
+        }
+
+        .message-input::placeholder {
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">🔗 QNET</div>
+        <ul class="nav-links">
+            <li><a href="#features">Возможности</a></li>
+            <li><a href="#security">Безопасность</a></li>
+            <li><a href="#stats">Статистика</a></li>
+        </ul>
+        <a href="#" class="nav-cta" id="navDemoBtn">Попробовать демо</a>
+    </nav>
+
+    <section class="hero" id="hero">
+        <div class="floating-bubbles">
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1 class="hero-logo" id="heroLogo">
+                <span class="logo-letter">Q</span>
+                <span class="logo-letter">N</span>
+                <span class="logo-letter">E</span>
+                <span class="logo-letter">T</span>
+            </h1>
+            <h2 class="hero-title">Мессенджер нового поколения</h2>
+            <p class="hero-subtitle">
+                Иммерсивное общение с технологиями будущего. Квантовая скорость, умный ИИ и революционный дизайн.
+            </p>
+            <div class="hero-actions">
+                <button class="cta-button primary" id="explodeBtn">Разлет букв!</button>
+                <button class="cta-button" id="demoBtn">Демо мессенджера</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <h2 class="section-title">Возможности QNET</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Квантовая скорость</h3>
+                <p class="feature-desc">Мгновенная доставка сообщений без задержек благодаря квантовым технологиям</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3 class="feature-title">Умный ИИ</h3>
+                <p class="feature-desc">Помощник, который понимает вас с полуслова и предугадывает желания</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title">Революционный дизайн</h3>
+                <p class="feature-desc">Интуитивный интерфейс, который адаптируется под ваш стиль общения</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title">Полная конфиденциальность</h3>
+                <p class="feature-desc">Квантовое шифрование и защита на уровне военных стандартов</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats" id="stats">
+        <h2 class="section-title">В цифрах</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">10M+</div>
+                <div class="stat-label">Пользователей</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">Время работы</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">0.001с</div>
+                <div class="stat-label">Задержка сообщений</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">256-bit</div>
+                <div class="stat-label">Шифрование</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="messenger-section" id="messengerSection">
+        <div class="messenger-container" id="messengerContainer">
+        </div>
+    </section>
+
+    <footer>
+        <div class="nav-brand">🔗 QNET</div>
+        <div class="footer-links">
+            <a href="#features">Возможности</a>
+            <a href="#stats">Статистика</a>
+            <a href="#" id="footerDemoBtn">Демо</a>
+        </div>
+        <p style="color: var(--text-secondary); margin-top: 2rem;">
+            © 2024 QNET Messenger. Все права защищены.
+        </p>
+    </footer>
+
+    <div class="flash-overlay" id="flashOverlay"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const heroSection = document.getElementById('hero');
+            const messengerSection = document.getElementById('messengerSection');
+            const explodeBtn = document.getElementById('explodeBtn');
+            const demoBtn = document.getElementById('demoBtn');
+            const navDemoBtn = document.getElementById('navDemoBtn');
+            const footerDemoBtn = document.getElementById('footerDemoBtn');
+            const flashOverlay = document.getElementById('flashOverlay');
+            const letters = document.querySelectorAll('.logo-letter');
+
+            let isExploded = false;
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#') {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }
+                });
+            });
+
+            explodeBtn.addEventListener('click', function() {
+                if (isExploded) return;
+                
+                isExploded = true;
+                
+                flashOverlay.classList.add('active');
+                
+                setTimeout(() => {
+                    letters.forEach((letter, index) => {
+                        const angle = Math.random() * Math.PI * 2;
+                        const distance = 100 + Math.random() * 200;
+                        const rotate = (Math.random() - 0.5) * 720;
+                        
+                        const x = Math.cos(angle) * distance;
+                        const y = Math.sin(angle) * distance;
+                        
+                        letter.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
+                        letter.style.opacity = '0.7';
+                        letter.classList.add('exploded');
+                    });
+
+                    setTimeout(() => {
+                        flashOverlay.classList.remove('active');
+                    }, 300);
+                }, 100);
+            });
+
+            function startMessengerDemo() {
+                flashOverlay.classList.add('active');
+                
+                setTimeout(() => {
+                    heroSection.style.display = 'none';
+                    messengerSection.style.display = 'block';
+                    
+                    loadMessenger();
+                    
+                    setTimeout(() => {
+                        flashOverlay.classList.remove('active');
+                    }, 300);
+                    
+                    messengerSection.scrollIntoView({ behavior: 'smooth' });
+                }, 200);
+            }
+
+            demoBtn.addEventListener('click', startMessengerDemo);
+            navDemoBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                startMessengerDemo();
+            });
+            footerDemoBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                startMessengerDemo();
+            });
+
+            function loadMessenger() {
+                const messengerContainer = document.getElementById('messengerContainer');
+                
+                messengerContainer.innerHTML = `
+                    <div class="sidebar">
+                        <div class="messenger-header">
+                            <h3>QNET Messenger</h3>
+                            <button class="cta-button" id="backToSiteBtn">← Назад</button>
+                        </div>
+                        <div class="messenger-sidebar">
+                            <div class="dialog-item">
+                                <div class="dialog-avatar">🛠️</div>
+                                <div class="dialog-info">
+                                    <div class="dialog-name">QNET Support</div>
+                                    <div class="dialog-preview">Добро пожаловать в QNET!</div>
+                                </div>
+                            </div>
+                            <div class="dialog-item">
+                                <div class="dialog-avatar">👩</div>
+                                <div class="dialog-info">
+                                    <div class="dialog-name">София</div>
+                                    <div class="dialog-preview">Привет! Как дела?</div>
+                                </div>
+                            </div>
+                            <div class="dialog-item">
+                                <div class="dialog-avatar">👨</div>
+                                <div class="dialog-info">
+                                    <div class="dialog-name">Артем</div>
+                                    <div class="dialog-preview">Го в кс?</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-area">
+                        <div class="messenger-header">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="dialog-avatar">🛠️</div>
+                                <div>
+                                    <div class="dialog-name">QNET Support</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.9rem;">в сети</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-messages">
+                            <div class="message received">
+                                Добро пожаловать в демо QNET Messenger! 🚀
+                            </div>
+                            <div class="message received">
+                                Здесь вы можете испытать возможности мессенджера нового поколения
+                            </div>
+                            <div class="message sent">
+                                Это выглядит потрясающе! 
+                            </div>
+                            <div class="message received">
+                                Попробуйте отправить сообщение ↓
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" class="message-input" placeholder="Введите сообщение..." id="messageInput">
+                            <button class="cta-button primary" id="sendMessageBtn">Отправить</button>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('backToSiteBtn').addEventListener('click', function() {
+                    flashOverlay.classList.add('active');
+                    
+                    setTimeout(() => {
+                        messengerSection.style.display = 'none';
+                        heroSection.style.display = 'flex';
+                        
+                        letters.forEach(letter => {
+                            letter.style.transform = 'translate(0, 0) rotate(0deg)';
+                            letter.style.opacity = '1';
+                            letter.classList.remove('exploded');
+                        });
+                        isExploded = false;
+                        
+                        setTimeout(() => {
+                            flashOverlay.classList.remove('active');
+                            heroSection.scrollIntoView({ behavior: 'smooth' });
+                        }, 300);
+                    }, 200);
+                });
+
+                document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
+                document.getElementById('messageInput').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+
+                function sendMessage() {
+                    const input = document.getElementById('messageInput');
+                    const text = input.value.trim();
+                    
+                    if (text) {
+                        const messagesContainer = document.querySelector('.chat-messages');
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = 'message sent';
+                        messageDiv.textContent = text;
+                        messagesContainer.appendChild(messageDiv);
+                        
+                        input.value = '';
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        
+                        setTimeout(() => {
+                            const replies = [
+                                "Отличное сообщение! ✨",
+                                "QNET обрабатывает ваше сообщение...",
+                                "Попробуйте наши премиум функции!",
+                                "Скорость доставки: 0.001с ⚡"
+                            ];
+                            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                            
+                            const replyDiv = document.createElement('div');
+                            replyDiv.className = 'message received';
+                            replyDiv.textContent = randomReply;
+                            messagesContainer.appendChild(replyDiv);
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }, 1000);
+                    }
+                }
+            }
+
+            document.addEventListener('mousemove', function(e) {
+                const bubbles = document.querySelectorAll('.bubble');
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                bubbles.forEach((bubble, index) => {
+                    const speed = (index + 1) * 0.5;
+                    const x = (mouseX - 0.5) * speed * 50;
+                    const y = (mouseY - 0.5) * speed * 50;
+                    
+                    bubble.style.transform = `translate(${x}px, ${y}px)`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
